@@ -93,7 +93,7 @@ export default function Contact() {
     "w-full rounded-xl border bg-neutral-900/50 px-4 py-3 text-sm font-light text-neutral-200 placeholder-neutral-600 outline-none transition-all duration-200";
 
   const inputIdle = "border-neutral-800";
-  const inputFocused = "border-amber-400/50 bg-neutral-900/80 shadow-[0_0_0_3px_rgba(251,191,36,0.06)]";
+  const inputFocused = "border-[#18130E] bg-neutral-900/80 shadow-[0_0_0_3px_rgba(24,19,14,0.06)]";
 
   return (
     <section
@@ -101,23 +101,14 @@ export default function Contact() {
       ref={sectionRef}
       className="relative overflow-hidden px-6 py-28 md:px-12 lg:px-24"
     >
-      {/* Background glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-96 w-[600px] -translate-x-1/2 opacity-[0.07]"
-        style={{
-          background: "radial-gradient(ellipse, #fbbf24 0%, transparent 70%)",
-        }}
-      />
-
       {/* Section label */}
       <div
         className={`mb-16 flex items-center gap-4 transition-all duration-700 ${
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
       >
-        <span className="h-px w-12 bg-amber-400/60" aria-hidden="true" />
-        <span className="text-xs font-light uppercase tracking-[0.2em] text-amber-400">
+        <span className="h-px w-12 bg-[#18130E]/30" aria-hidden="true" />
+        <span className="text-xs font-light uppercase tracking-[0.2em] text-neutral-500">
           Contact
         </span>
       </div>
@@ -241,7 +232,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={formState === "submitting"}
-                    className="group mt-2 flex items-center gap-2 self-start rounded-full bg-amber-400 px-6 py-3 text-sm font-medium text-neutral-950 transition-all duration-200 hover:bg-amber-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="group mt-2 flex items-center gap-2 self-start rounded-full bg-[#18130E] px-6 py-3 text-sm font-medium text-[#F0EBE1] transition-all duration-200 hover:bg-[#3C3630] disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {formState === "submitting" ? (
                       <>
@@ -310,7 +301,7 @@ export default function Contact() {
                       className="group flex items-center justify-between rounded-xl border border-transparent px-3 py-2.5 transition-all duration-200 hover:border-neutral-800 hover:bg-neutral-900/60"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-neutral-600 transition-colors group-hover:text-amber-400">
+                        <span className="text-neutral-600 transition-colors group-hover:text-neutral-100">
                           {icon}
                         </span>
                         <div>
@@ -320,7 +311,7 @@ export default function Contact() {
                       </div>
                       <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                         aria-hidden="true"
-                        className="text-neutral-700 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-amber-400">
+                        className="text-neutral-700 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-neutral-100">
                         <path d="M1 9L9 1M9 1H4M9 1V6" stroke="currentColor"
                           strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>

@@ -106,7 +106,7 @@ function ProjectRow({
         {/* Index number */}
         <span
           className={`shrink-0 font-serif text-sm transition-colors duration-300 ${
-            expanded ? "text-amber-400" : "text-neutral-700 group-hover:text-neutral-500"
+            expanded ? "text-[#18130E]" : "text-neutral-600 group-hover:text-neutral-500"
           }`}
         >
           {project.index}
@@ -117,13 +117,13 @@ function ProjectRow({
           <div className="flex items-center gap-3">
             <h3
               className={`font-serif text-2xl tracking-tight transition-colors duration-200 md:text-3xl ${
-                expanded ? "text-amber-400" : "text-neutral-100 group-hover:text-neutral-200"
+                expanded ? "text-neutral-100" : "text-neutral-100 group-hover:text-neutral-200"
               }`}
             >
               {project.title}
             </h3>
             {project.featured && (
-              <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-light uppercase tracking-widest text-amber-400">
+              <span className="rounded-full border border-neutral-800 bg-neutral-900/40 px-2 py-0.5 text-[10px] font-light uppercase tracking-widest text-neutral-500">
                 Featured
               </span>
             )}
@@ -141,8 +141,8 @@ function ProjectRow({
           <span
             className={`flex h-7 w-7 items-center justify-center rounded-full border transition-all duration-300 ${
               expanded
-                ? "border-amber-400/50 bg-amber-400/10 text-amber-400 rotate-45"
-                : "border-neutral-800 text-neutral-600 group-hover:border-neutral-700 group-hover:text-neutral-400"
+                ? "border-[#18130E] bg-[#18130E] text-[#F0EBE1] rotate-45"
+                : "border-neutral-800 text-neutral-600 group-hover:border-[#18130E] group-hover:text-neutral-100"
             }`}
             aria-hidden="true"
           >
@@ -205,7 +205,7 @@ function ProjectRow({
                     href={project.live}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group/link flex items-center gap-2 rounded-full bg-amber-400 px-4 py-1.5 text-sm font-medium text-neutral-950 transition-colors duration-200 hover:bg-amber-300"
+                    className="group/link flex items-center gap-2 rounded-full bg-[#18130E] px-4 py-1.5 text-sm font-medium text-[#F0EBE1] transition-colors duration-200 hover:bg-[#3C3630]"
                   >
                     Live demo
                     <svg
@@ -270,8 +270,8 @@ export default function Projects() {
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
       >
-        <span className="h-px w-12 bg-amber-400/60" aria-hidden="true" />
-        <span className="text-xs font-light uppercase tracking-[0.2em] text-amber-400">
+        <span className="h-px w-12 bg-[#18130E]/30" aria-hidden="true" />
+        <span className="text-xs font-light uppercase tracking-[0.2em] text-neutral-500">
           Projects
         </span>
       </div>

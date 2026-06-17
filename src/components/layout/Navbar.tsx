@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 
 // ─────────────────────────────────────────────
 // Types & config
@@ -165,18 +165,6 @@ export function SectionSlide({
   className?: string;
 }) {
   const { activeSection, leavingSection, homeSlideFrom } = useNav();
-  const cursorRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (cursorRef.current) {
-        cursorRef.current.style.transform =
-          `translate(${e.clientX - 350}px, ${e.clientY - 350}px)`;
-      }
-    };
-    window.addEventListener("mousemove", handler, { passive: true });
-    return () => window.removeEventListener("mousemove", handler);
-  }, []);
 
   const isActive = activeSection === id;
   const isLeaving = leavingSection === id;
@@ -227,42 +215,6 @@ export function SectionSlide({
       }}
       className={className}
     >
-      {/* Cursor-following ambient light */}
-      <div
-        ref={cursorRef}
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(251,191,36,0.1) 0%, rgba(251,191,36,0.035) 45%, transparent 70%)",
-          filter: "blur(56px)",
-          pointerEvents: "none",
-          willChange: "transform",
-          zIndex: 0,
-        }}
-      />
-
-      {/* Dot grid for non-home sections */}
-      {id !== "home" && (
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        />
-      )}
-
       {children}
     </div>
   );
@@ -300,7 +252,7 @@ export default function Navbar() {
               width: "24px",
               height: "24px",
               borderRadius: "50%",
-              border: `1px solid rgba(251,191,36,${0.18 - i * 0.07})`,
+              border: `1px solid rgba(24,19,14,${0.18 - i * 0.07})`,
               background: "transparent",
               transform: "translate(-50%, -50%) scale(0)",
               pointerEvents: "none",
@@ -314,6 +266,9 @@ export default function Navbar() {
         {(Object.keys(NAV_EDGE) as Section[]).map((section) => {
           const edge = NAV_EDGE[section]!;
           const isActive = activeSection === section;
+          // Hub-and-spoke: when not on home, only the current section's pill is visible.
+          // Clicking it returns to home. From home, all four pills are shown.
+          if (activeSection !== "home" && !isActive) return null;
           return (
             <EdgePill
               key={section}
@@ -364,19 +319,19 @@ function EdgePill({
         POSITION_CLASS[edge],
         "pointer-events-auto group",
         "flex items-center",
-        "border backdrop-blur-md",
+        "border",
         "transition-all duration-200 ease-out cursor-pointer select-none",
         "overflow-hidden",
         isActive
-          ? "bg-amber-400 border-amber-400 shadow-[0_0_40px_rgba(251,191,36,0.35)]"
-          : "bg-neutral-950/90 border-white/10 hover:border-white/20 hover:brightness-125",
+          ? "bg-[#18130E] border-[#18130E]"
+          : "bg-[#E6E1D7] border-[#C8C3BA] hover:border-[#18130E]",
       ].join(" ")}
     >
       {!isActive && (
         <span
           className={[
             "absolute transition-all duration-200",
-            "bg-amber-400/60 group-hover:bg-amber-400",
+            "bg-[#18130E]/30 group-hover:bg-[#18130E]",
             edge === "left"   ? "right-0 top-[20%] h-[60%] w-[2px] group-hover:h-[100%] group-hover:top-[0%]" : "",
             edge === "right"  ? "left-0 top-[20%] h-[60%] w-[2px] group-hover:h-[100%] group-hover:top-[0%]"  : "",
             edge === "top"    ? "bottom-0 left-[20%] w-[60%] h-[2px] group-hover:w-[100%] group-hover:left-[0%]" : "",
@@ -406,8 +361,8 @@ function HorizontalLabel({
   label: string;
   isActive: boolean;
 }) {
-  const arrowCls = `text-base leading-none ${isActive ? "text-amber-900" : "text-amber-400"}`;
-  const textCls  = `text-[11px] font-semibold tracking-[0.14em] uppercase ${isActive ? "text-amber-950" : "text-neutral-300"}`;
+  const arrowCls = `text-base leading-none ${isActive ? "text-[#F0EBE1]" : "text-[#18130E]"}`;
+  const textCls  = `text-[11px] font-semibold tracking-[0.14em] uppercase ${isActive ? "text-[#F0EBE1]" : "text-[#18130E]"}`;
   return (
     <span className="flex items-center gap-2">
       {edge === "top" && (
@@ -448,8 +403,8 @@ function VerticalLabel({
   label: string;
   isActive: boolean;
 }) {
-  const arrowCls = `text-base leading-none ${isActive ? "text-amber-900" : "text-amber-400"}`;
-  const textCls  = `text-[11px] font-semibold tracking-[0.14em] uppercase ${isActive ? "text-amber-950" : "text-neutral-300"}`;
+  const arrowCls = `text-base leading-none ${isActive ? "text-[#F0EBE1]" : "text-[#18130E]"}`;
+  const textCls  = `text-[11px] font-semibold tracking-[0.14em] uppercase ${isActive ? "text-[#F0EBE1]" : "text-[#18130E]"}`;
   return (
     <span className="flex flex-col items-center gap-1.5">
       {edge === "right" && (

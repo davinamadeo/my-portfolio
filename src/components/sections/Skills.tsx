@@ -108,7 +108,7 @@ function SkillBar({
       </div>
       <div className="h-px w-full bg-neutral-800 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-amber-400 to-amber-300 transition-all duration-700 ease-out"
+          className="h-full bg-[#18130E] transition-all duration-700 ease-out"
           style={{
             width: animate ? `${skill.level}%` : "0%",
             transitionDelay: `${delay}ms`,
@@ -144,23 +144,14 @@ export default function Skills() {
       ref={sectionRef}
       className="relative overflow-hidden px-6 py-28 md:px-12 lg:px-24"
     >
-      {/* Subtle background accent */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full opacity-[0.06]"
-        style={{
-          background: "radial-gradient(circle, #fbbf24 0%, transparent 70%)",
-        }}
-      />
-
       {/* Section label */}
       <div
         className={`mb-16 flex items-center gap-4 transition-all duration-700 ${
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
       >
-        <span className="h-px w-12 bg-amber-400/60" aria-hidden="true" />
-        <span className="text-xs font-light uppercase tracking-[0.2em] text-amber-400">
+        <span className="h-px w-12 bg-[#18130E]/30" aria-hidden="true" />
+        <span className="text-xs font-light uppercase tracking-[0.2em] text-neutral-500">
           Skills
         </span>
       </div>
@@ -193,13 +184,13 @@ export default function Skills() {
                 onClick={() => setActiveCategory(i)}
                 className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-light transition-all duration-200 ${
                   activeCategory === i
-                    ? "border-amber-400/60 bg-amber-400/10 text-amber-400"
-                    : "border-neutral-800 bg-neutral-900/40 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300"
+                    ? "border-[#18130E] bg-[#18130E] text-[#F0EBE1]"
+                    : "border-neutral-800 bg-neutral-900/40 text-neutral-500 hover:border-[#18130E] hover:text-neutral-100"
                 }`}
               >
                 <span
                   className={
-                    activeCategory === i ? "text-amber-400" : "text-neutral-600"
+                    activeCategory === i ? "text-[#F0EBE1]" : "text-neutral-600"
                   }
                 >
                   {cat.icon}
@@ -241,7 +232,7 @@ export default function Skills() {
                         categories[activeCategory].skills.some(
                           (s) => s.name === skill.name
                         )
-                          ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
+                          ? "border-[#18130E] bg-[#18130E] text-[#F0EBE1]"
                           : "border-neutral-800 bg-neutral-900/40 text-neutral-500"
                       }`}
                     >
@@ -262,7 +253,7 @@ export default function Skills() {
                       key={item}
                       className="flex items-center gap-1.5 rounded-full border border-neutral-800 px-3 py-1 text-xs font-light text-neutral-500"
                     >
-                      <span className="h-1 w-1 rounded-full bg-emerald-400" aria-hidden="true" />
+                      <span className="h-1 w-1 rounded-full bg-[#18130E]/40" aria-hidden="true" />
                       {item}
                     </span>
                   ))}

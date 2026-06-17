@@ -9,150 +9,180 @@ import Projects from "@/components/sections/Projects";
 import Contact from "@/components/sections/Contact";
 import type { Section } from "@/components/layout/Navbar";
 
-// ── Per-section background definitions ──
-// Each is a fixed layer that fades in/out with the active section.
-const SECTION_BACKGROUNDS: Record<Section, React.ReactNode> = {
+const B = "#18130E";
+const T = "#BEB9B0";
 
-  // Home — warm amber orbs, organic glow
-  home: (
-    <>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `
-          radial-gradient(ellipse 45% 30% at 8%  18%, rgba(251,191,36,0.10) 0%, transparent 100%),
-          radial-gradient(ellipse 30% 40% at 88% 78%, rgba(251,191,36,0.07) 0%, transparent 100%),
-          radial-gradient(ellipse 22% 22% at 62% 22%, rgba(251,191,36,0.08) 0%, transparent 100%),
-          radial-gradient(ellipse 35% 22% at 28% 88%, rgba(99,102,241,0.05) 0%, transparent 100%),
-          radial-gradient(ellipse 18% 28% at 75% 48%, rgba(251,191,36,0.05) 0%, transparent 100%)
-        `,
-      }} />
-    </>
-  ),
-
-  // About — cool blue-indigo, calm and personal
-  about: (
-    <>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `
-          radial-gradient(ellipse 50% 40% at 15% 30%, rgba(99,102,241,0.10) 0%, transparent 100%),
-          radial-gradient(ellipse 35% 50% at 85% 70%, rgba(139,92,246,0.07) 0%, transparent 100%),
-          radial-gradient(ellipse 25% 30% at 55% 80%, rgba(99,102,241,0.05) 0%, transparent 100%)
-        `,
-      }} />
-    </>
-  ),
-
-  // Skills — teal/emerald, technical, fresh
-  skills: (
-    <>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `
-          radial-gradient(ellipse 40% 35% at 20% 15%, rgba(16,185,129,0.09) 0%, transparent 100%),
-          radial-gradient(ellipse 30% 40% at 80% 80%, rgba(6,182,212,0.07) 0%, transparent 100%),
-          radial-gradient(ellipse 20% 25% at 60% 50%, rgba(16,185,129,0.05) 0%, transparent 100%)
-        `,
-      }} />
-    </>
-  ),
-
-  // Projects — amber/orange, energetic, creative
-  projects: (
-    <>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `
-          radial-gradient(ellipse 45% 35% at 85% 20%, rgba(251,191,36,0.10) 0%, transparent 100%),
-          radial-gradient(ellipse 35% 45% at 10% 75%, rgba(249,115,22,0.07) 0%, transparent 100%),
-          radial-gradient(ellipse 25% 25% at 50% 55%, rgba(251,191,36,0.05) 0%, transparent 100%)
-        `,
-      }} />
-    </>
-  ),
-
-  // Contact — rose/pink, warm, inviting
-  contact: (
-    <>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: `
-          radial-gradient(ellipse 40% 35% at 75% 25%, rgba(244,63,94,0.08) 0%, transparent 100%),
-          radial-gradient(ellipse 35% 40% at 20% 70%, rgba(251,191,36,0.07) 0%, transparent 100%),
-          radial-gradient(ellipse 22% 28% at 50% 85%, rgba(244,63,94,0.05) 0%, transparent 100%)
-        `,
-      }} />
-    </>
-  ),
-};
-
-// ── Shared elements always visible ──
-function SharedBackground() {
-  return (
-    <>
-      {/* Base dark */}
-      <div style={{ position: "absolute", inset: 0, background: "#0a0a0a" }} />
-
-      {/* Dot grid — always present */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-
-      {/* Vignette — always present */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute", inset: 0,
-          background: "radial-gradient(ellipse 110% 110% at 50% 50%, transparent 35%, rgba(0,0,0,0.75) 100%)",
-        }}
-      />
-
-      {/* Edge fades */}
-      <div aria-hidden="true" style={{ position: "absolute", inset: "0 0 auto 0", height: "8rem", background: "linear-gradient(to bottom, rgba(0,0,0,0.5), transparent)" }} />
-      <div aria-hidden="true" style={{ position: "absolute", inset: "auto 0 0 0", height: "8rem", background: "linear-gradient(to top, rgba(0,0,0,0.5), transparent)" }} />
-    </>
-  );
+interface BlockState {
+  tx: string;
+  ty: string;
+  width: number;
+  height: number;
+  rotate: number;
+  opacity: number;
 }
 
-// ── Crossfading background layer ──
-function SectionBackground() {
+interface BlockConfig {
+  color: string;
+  sections: Record<Section, BlockState>;
+}
+
+// Each block is a "character" that moves between positions as the active section changes.
+// All blocks sit at top:0/left:0 and are positioned entirely via CSS transform: translate+rotate.
+// CSS transitions animate all properties simultaneously → blocks appear to physically move.
+const BLOCKS: BlockConfig[] = [
+  // Block 0: T — large taupe corner base (migrates between corners)
+  {
+    color: T,
+    sections: {
+      home:     { tx: "calc(100vw - 348px)", ty: "-16px",                    width: 300, height: 180, rotate: 0,  opacity: 1 },
+      about:    { tx: "-20px",               ty: "8vh",                      width: 320, height: 200, rotate: 0,  opacity: 1 },
+      skills:   { tx: "calc(100vw - 336px)", ty: "-16px",                    width: 320, height: 560, rotate: 0,  opacity: 1 },
+      projects: { tx: "-16px",               ty: "-16px",                    width: 360, height: 240, rotate: 0,  opacity: 1 },
+      contact:  { tx: "calc(100vw - 276px)", ty: "-16px",                    width: 260, height: 190, rotate: 0,  opacity: 1 },
+    },
+  },
+  // Block 1: B — primary dark anchor (dominant corner slab)
+  {
+    color: B,
+    sections: {
+      home:     { tx: "calc(100vw - 220px)", ty: "0px",                      width: 220, height: 260, rotate: -3, opacity: 1 },
+      about:    { tx: "0px",                 ty: "14vh",                     width: 200, height: 300, rotate: -2, opacity: 1 },
+      skills:   { tx: "calc(100vw - 210px)", ty: "0px",                      width: 210, height: 400, rotate: 0,  opacity: 1 },
+      projects: { tx: "0px",                 ty: "0px",                      width: 270, height: 170, rotate: 3,  opacity: 1 },
+      contact:  { tx: "calc(100vw - 180px)", ty: "0px",                      width: 180, height: 280, rotate: 0,  opacity: 1 },
+    },
+  },
+  // Block 2: B — secondary top accent
+  {
+    color: B,
+    sections: {
+      home:     { tx: "0px",                 ty: "0px",                      width: 180, height: 120, rotate: 0,  opacity: 1 },
+      about:    { tx: "calc(100vw - 140px)", ty: "0px",                      width: 140, height:  90, rotate: 0,  opacity: 1 },
+      skills:   { tx: "calc(100vw + 200px)", ty: "-300px",                   width: 180, height: 120, rotate: 0,  opacity: 0 },
+      projects: { tx: "calc(100vw - 14px)",  ty: "22vh",                     width:  14, height: 220, rotate: 0,  opacity: 1 },
+      contact:  { tx: "8vw",                 ty: "38vh",                     width:  56, height:  56, rotate: -4, opacity: 1 },
+    },
+  },
+  // Block 3: B — thin stripe / mid accent
+  {
+    color: B,
+    sections: {
+      home:     { tx: "0px",                 ty: "32vh",                     width:  12, height: 160, rotate: 1,  opacity: 1 },
+      about:    { tx: "0px",                 ty: "50vh",                     width:  12, height: 180, rotate: 0,  opacity: 1 },
+      skills:   { tx: "4vw",                 ty: "42vh",                     width:  64, height:  64, rotate: 3,  opacity: 1 },
+      projects: { tx: "2vw",                ty: "35vh",                     width:  60, height: 350, rotate: -10,  opacity: 1 },
+      contact:  { tx: "-100px",              ty: "-100px",                   width:  12, height: 160, rotate: 0,  opacity: 0 },
+    },
+  },
+  // Block 4: B — small floating square / thin bar
+  {
+    color: B,
+    sections: {
+      home:     { tx: "calc(92vw - 56px)",   ty: "48vh",                     width:  56, height:  56, rotate: 6,  opacity: 1 },
+      about:    { tx: "calc(100vw - 142px)", ty: "70px",                     width:  52, height:  52, rotate: 5,  opacity: 1 },
+      skills:   { tx: "calc(4vw + 70px)",    ty: "42vh",                     width:  14, height: 160, rotate: 0,  opacity: 1 },
+      projects: { tx: "calc(100vw - 124px)", ty: "36vh",                     width:  72, height:  72, rotate: -4, opacity: 1 },
+      contact:  { tx: "calc(100vw + 100px)", ty: "48vh",                     width:  56, height:  56, rotate: 0,  opacity: 0 },
+    },
+  },
+  // Block 5: T — large taupe bottom base
+  {
+    color: T,
+    sections: {
+      home:     { tx: "-16px",               ty: "calc(100vh - 164px)",      width: 260, height: 180, rotate: 0,  opacity: 1 },
+      about:    { tx: "calc(100vw - 356px)", ty: "calc(100vh - 164px)",      width: 340, height: 180, rotate: 0,  opacity: 1 },
+      skills:   { tx: "-400px",              ty: "calc(100vh - 164px)",      width: 260, height: 180, rotate: 0,  opacity: 0 },
+      projects: { tx: "calc(110vw - 356px)", ty: "calc(100vh - 224px)",      width: 240, height: 240, rotate: 0,  opacity: 1 },
+      contact:  { tx: "-16px",               ty: "calc(100vh - 184px)",      width: 300, height: 200, rotate: 0,  opacity: 1 },
+    },
+  },
+  // Block 6: B — bottom dark anchor
+  {
+    color: B,
+    sections: {
+      home:     { tx: "0px",                 ty: "calc(100vh - 200px)",      width: 180, height: 200, rotate: 2,  opacity: 1 },
+      about:    { tx: "calc(100vw - 240px)", ty: "calc(100vh - 110px)",      width: 240, height: 110, rotate: 1,  opacity: 1 },
+      skills:   { tx: "-16px",               ty: "calc(100vh - 150px)",      width: 240, height: 150, rotate: 0,  opacity: 1 },
+      projects: { tx: "calc(100vw - 250px)", ty: "calc(100vh - 170px)",      width: 250, height: 170, rotate: -3, opacity: 1 },
+      contact:  { tx: "0px",                 ty: "calc(100vh - 140px)",      width: 210, height: 140, rotate: 2,  opacity: 1 },
+    },
+  },
+  // Block 7: T — wide accent strip / small square
+  {
+    color: T,
+    sections: {
+      home:     { tx: "calc(100vw - 200px)", ty: "calc(100vh - 112px)",      width: 200, height:  72, rotate: -2, opacity: 1 },
+      about:    { tx: "calc(100vw + 300px)", ty: "calc(100vh - 112px)",      width: 200, height:  72, rotate: -2, opacity: 0 },
+      skills:   { tx: "200px",               ty: "calc(100vh - 202px)",      width:  52, height:  52, rotate: 0,  opacity: 1 },
+      projects: { tx: "0px",                 ty: "calc(100vh - 90px)",       width: 150, height:  90, rotate: 0,  opacity: 1 },
+      contact:  { tx: "calc(100vw + 300px)", ty: "calc(100vh - 112px)",      width: 200, height:  72, rotate: -2, opacity: 0 },
+    },
+  },
+  // Block 8: B — bottom-right corner block
+  {
+    color: B,
+    sections: {
+      home:     { tx: "calc(100vw - 100px)", ty: "calc(100vh - 100px)",      width: 100, height: 100, rotate: 0,  opacity: 1 },
+      about:    { tx: "calc(100vw + 200px)", ty: "calc(100vh - 100px)",      width: 100, height: 100, rotate: 0,  opacity: 0 },
+      skills:   { tx: "calc(100vw + 200px)", ty: "calc(100vh - 100px)",      width: 100, height: 100, rotate: 0,  opacity: 0 },
+      projects: { tx: "calc(100vw - 100px)", ty: "calc(5vh - 100px)",      width: 300, height: 200, rotate: 20,  opacity: 1 },
+      contact:  { tx: "calc(100vw - 180px)", ty: "calc(100vh - 120px)",      width: 180, height: 120, rotate: 0,  opacity: 1 },
+    },
+  },
+];
+
+const BLOCK_TRANSITION = [
+  "transform 0.8s cubic-bezier(0.76, 0, 0.24, 1)",
+  "width 0.8s cubic-bezier(0.76, 0, 0.24, 1)",
+  "height 0.8s cubic-bezier(0.76, 0, 0.24, 1)",
+  "opacity 0.4s ease",
+].join(", ");
+
+function AnimatedBackground() {
   const { activeSection } = useNav();
 
   return (
-    <>
-      {(Object.keys(SECTION_BACKGROUNDS) as Section[]).map((section) => (
-        <div
-          key={section}
-          aria-hidden="true"
-          style={{
-            position: "absolute", inset: 0,
-            opacity: activeSection === section ? 1 : 0,
-            transition: "opacity 0.7s ease",
-            pointerEvents: "none",
-          }}
-        >
-          {SECTION_BACKGROUNDS[section]}
-        </div>
-      ))}
-    </>
+    <div
+      className="hidden md:block"
+      style={{ position: "absolute", inset: 0, overflow: "hidden" }}
+    >
+      {BLOCKS.map((block, i) => {
+        const pos = block.sections[activeSection];
+        return (
+          <div
+            key={i}
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: `${pos.width}px`,
+              height: `${pos.height}px`,
+              backgroundColor: block.color,
+              transform: `translate(${pos.tx}, ${pos.ty}) rotate(${pos.rotate}deg)`,
+              opacity: pos.opacity,
+              transition: BLOCK_TRANSITION,
+              willChange: "transform",
+            }}
+          />
+        );
+      })}
+    </div>
   );
 }
 
-// ── Page ──
 export default function Home() {
   return (
     <NavProvider>
       <Navbar />
 
-      {/* Fixed background — always behind everything */}
-      <div aria-hidden="true" className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <SharedBackground />
-        <SectionBackground />
+      {/* Fixed background — base colour + blocks that physically move between section compositions */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 z-0 pointer-events-none overflow-hidden"
+        style={{ backgroundColor: "#D9D4C8" }}
+      >
+        <AnimatedBackground />
       </div>
 
       {/* Sections */}
